@@ -2,10 +2,24 @@
   @for(column of columns; track column.id) {
   <div class="card column-card">
     <div class="card-header">
+      @if(editingColumnId === column.id) {
+      <form (ngSubmit)="saveColumnName(column.id)">
+        <input type="text" [(ngModel)]="editedColumnName" name="editedColumnName" (keyup.escape)="cancelEditingColumn()"
+          autofocus />
+      </form>
+      } @else {
       <h3>{{ column.name }}</h3>
+      }
 
-      <div class="delete-btn">
-        <i class="fa-solid fa-xmark"></i>
+      <div class="icons">
+        <!-- edit btn -->
+        <div class="delete-btn" (click)="startEditingColumn(column)">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </div>
+
+        <div class="delete-btn" (click)="deleteColumn(column.id)">
+          <i class="fa-solid fa-xmark"></i>
+        </div>
       </div>
     </div>
 
@@ -13,11 +27,29 @@
     <div class="tasks-list">
       @for(task of column.tasks; track task.id) {
       <div class="task-item">
+        @if(editingTaskId === task.id) {
+        <form (ngSubmit)="saveTaskName(task.id, column.id)">
+          <input type="text" [(ngModel)]="editedTaskName" name="editedTaskName" (keyup.escape)="cancelEditingTask()"
+            autofocus />
+        </form>
+        } @else {
         <h3>{{ task.name }}</h3>
+        }
+
+        <div class="icons">
+          <!-- edit btn -->
+          <div class="delete-btn" (click)="startEditingTask(task)">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </div>
+
+          <div class="delete-btn" (click)="deleteTask(task.id)">
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+        </div>
       </div>
       }
     </div>
-    
+
 
     <!-- Formulário de adição -->
     @if(addingTaskToColumnId === column.id) {

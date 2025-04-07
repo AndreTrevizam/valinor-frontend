@@ -35,5 +35,26 @@ export class TaskService {
     }
   }
 
+  async deleteTask(taskId: string): Promise<void> {
+    try {
+      await axios.delete(`${this.apiUrl}/${taskId}`);
+    } catch (error) {
+      console.error(`Error deleting task ${taskId}:`, error);
+      throw error;
+    }
+  }
+
+  async updateTaskName(taskId: string, updatedData: { name: string, columnId: string }): Promise<Task> {
+    try {
+      const response = await axios.put<Task>(`${this.apiUrl}/${taskId}`, updatedData)
+
+      return response.data
+
+    } catch (error) {
+      console.log('Error updating name task', error)
+      throw error   
+    }
+  }
+
   constructor() { }
 }

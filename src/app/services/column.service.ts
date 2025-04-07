@@ -106,12 +106,15 @@ export class ColumnService {
     }
   }
 
-  // Método para atualizar uma única coluna
-  updateColumn(updatedColumn: Column) {
-    const currentColumns = this.columnsSource.value;
-    const updatedColumns = currentColumns.map(column => 
-      column.id === updatedColumn.id ? updatedColumn : column
-    );
-    this.columnsSource.next(updatedColumns);
+  async updateColumnName(columnId: string, updatedData: { name: string }): Promise<Column> {
+    try {
+      const response = await axios.put<Column>(`${this.apiUrl}/${columnId}`, updatedData)
+
+      return response.data
+
+    } catch (error) {
+      console.log('Error updating name column', error)
+      throw error   
+    }
   }
 }
