@@ -1,1 +1,109 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --gray-900: oklch(21% 0.034 264.665);
+
+  --slate-900: oklch(20.8% 0.042 265.755);
+  --slate-800: oklch(20.8% 0.042 265.755);
+  --slate-700: oklch(27.9% 0.041 260.031);
+  --slate-600: oklch(44.6% 0.043 257.281);
+  --slate-500: oklch(55.4% 0.046 257.417);
+  --slate-400: oklch(70.4% 0.04 256.788);
+  --slate-300: oklch(70.4% 0.04 256.788);
+  --slate-200: oklch(92.9% 0.013 255.508);
+  --slate-100: oklch(96.8% 0.007 247.896);
+
+  --blue-400: oklch(70.7% 0.165 254.624);
+  --blue-300: oklch(80.9% 0.105 251.813);
+
+  --card-bg: #364b6c;
+}
+
+body {
+  background-color: var(--gray-900);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: antialiased;
+
+  font-family: "Roboto", sans-serif;
+}
+
+.flex {
+  display: flex;
+}
+
+.align-items {
+  align-items: center;
+}
+
+.gap-1 {
+  gap: 1rem;
+}
+
+.btn {
+  all: unset;
+  cursor: pointer;
+  background-color: var(--card-bg);
+  border-radius: .5rem;
+  padding: .75rem 1rem;
+  color: var(--slate-100);
+}
+
+.btn-primary {
+  all: unset;
+  padding: .5rem;
+  background-color: var(--blue-400);
+  border-radius: .25rem;
+  color: black;
+  transition: .2s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--blue-300);
+  }
+}
+
+.card {
+  width: 17rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+
+  & input {
+    all: unset;
+    width: 90%;
+    padding: .25rem;
+    border-radius: .25rem;
+    background-color: var(--slate-700);
+    border: 1px solid var(--slate-400);
+    color: var(--slate-200);
+
+    &::placeholder {
+      color: var(--slate-300);
+    }
+
+    &:focus {
+      outline: 1px solid var(--blue-400);
+      border: 1px solid var(--blue-400);
+    }
+  }
+}
+
+.form-card {
+  border-radius: .5rem;
+  background-color: var(--card-bg);
+  padding: .75rem .5rem;
+}

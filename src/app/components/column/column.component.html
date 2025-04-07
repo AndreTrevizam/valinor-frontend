@@ -1,0 +1,44 @@
+<div class="column-wrapper">
+  @for(column of columns; track column.id) {
+  <div class="card column-card">
+    <div class="card-header">
+      <h3>{{ column.name }}</h3>
+
+      <div class="delete-btn">
+        <i class="fa-solid fa-xmark"></i>
+      </div>
+    </div>
+
+    <!-- Lista de tasks -->
+    <div class="tasks-list">
+      @for(task of column.tasks; track task.id) {
+      <div class="task-item">
+        <h3>{{ task.name }}</h3>
+      </div>
+      }
+    </div>
+    
+
+    <!-- Formulário de adição -->
+    @if(addingTaskToColumnId === column.id) {
+    <div class="form form-card">
+      <form (ngSubmit)="addTask($event, column.id)">
+        <input type="text" placeholder="Nome da Tarefa" required name="taskName" [(ngModel)]="newTaskName" />
+
+        <div class="flex gap-1">
+          <button type="submit" class="btn-primary">
+            Adicionar Tarefa
+          </button>
+
+          <button type="button" class="btn-primary" (click)="cancelAddingTask()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+    } @else {
+    <button class="btn-primary" (click)="startAddingTask(column.id)">Adicionar tarefa</button>
+    }
+  </div>
+  }
+</div>
