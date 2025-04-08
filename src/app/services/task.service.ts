@@ -27,7 +27,6 @@ export class TaskService {
   async getTasksByColumn(columnId: string): Promise<Task[]> {
     try {
       const response = await axios.get<Task[]>(`${environment.apiUrl}/tasks/${columnId}`);
-      console.log('Tasks fetched:', response.data);
       return response.data;
     } catch (error) {
       console.error(`Error loading tasks for column ${columnId}:`, error);

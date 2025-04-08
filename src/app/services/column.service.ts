@@ -73,48 +73,57 @@ export class ColumnService {
 
   async deleteColumn(columnId: string): Promise<void> {
     try {
+      if (!columnId) {
+        throw new Error('Column ID is required');
+      }
+
       await axios.delete(`${this.apiUrl}/${columnId}`);
-      const currentColumns = this.columnsSource.value.filter(c => c.id !== columnId);
-      this.columnsSource.next(currentColumns);
+
+      const updatedColumns = this.columnsSource.value.filter(column => column.id !== columnId);
+      this.columnsSource.next(updatedColumns);
+
+      return;
+
     } catch (error) {
-      console.error('Error deleting column:', error);
-      throw error;
+      console.log('Error', error)
+      throw error
     }
   }
+
 
   async addTaskToColumn(columnId: string, task: Task) {
-    const currentColumns = this.columnsSource.value;
-    const updatedColumns = currentColumns.map(column => {
-      if (column.id === columnId) {
-        return {
-          ...column,
-          tasks: [...(column.tasks || []), task]
-        };
-      }
-      return column;
-    });
-    this.columnsSource.next(updatedColumns);
-  }
+  const currentColumns = this.columnsSource.value;
+  const updatedColumns = currentColumns.map(column => {
+    if (column.id === columnId) {
+      return {
+        ...column,
+        tasks: [...(column.tasks || []), task]
+      };
+    }
+    return column;
+  });
+  this.columnsSource.next(updatedColumns);
+}
 
   async loadColumnsWithTasks() {
-    try {
-      const columns = await this.getColumns(true);
-      this.columnsSource.next(columns);
-    } catch (error) {
-      console.error('Error loading columns with tasks:', error);
-      throw error;
-    }
+  try {
+    const columns = await this.getColumns(true);
+    this.columnsSource.next(columns);
+  } catch (error) {
+    console.error('Error loading columns with tasks:', error);
+    throw error;
   }
+}
 
-  async updateColumnName(columnId: string, updatedData: { name: string }): Promise<Column> {
-    try {
-      const response = await axios.put<Column>(`${this.apiUrl}/${columnId}`, updatedData)
+  async updateColumnName(columnId: string, updatedData: { name: string }): Promise < Column > {
+  try {
+    const response = await axios.put<Column>(`${this.apiUrl}/${columnId}`, updatedData)
 
       return response.data
 
-    } catch (error) {
-      console.log('Error updating name column', error)
-      throw error   
-    }
+  } catch(error) {
+    console.log('Error updating name column', error)
+    throw error
   }
+}
 }

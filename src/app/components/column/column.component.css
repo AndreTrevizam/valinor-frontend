@@ -16,6 +16,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .delete-btn {
@@ -50,12 +52,8 @@
   border-radius: .25rem;
   gap: .5rem;
   padding: .5rem;
-
-  & h3 {
-    display: flex;
-    flex-wrap: wrap;
-    overflow: hidden;
-  }
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .icons {

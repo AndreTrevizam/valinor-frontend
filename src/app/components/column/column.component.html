@@ -69,7 +69,12 @@
       </form>
     </div>
     } @else {
-    <button class="btn-primary" (click)="startAddingTask(column.id)">Adicionar tarefa</button>
+    <button class="btn-primary" (click)="startAddingTask(column.id)">
+      <div class="flex align-center gap-1">
+        <i class="fa-solid fa-plus"></i>
+        Adicionar tarefa
+      </div>
+    </button>
     }
   </div>
   }
