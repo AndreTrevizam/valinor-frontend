@@ -11,22 +11,36 @@ export class TaskService {
 
   async createTask(columnId: string, taskData: { name: string }): Promise<Task> {
     try {
+      // Garante que o name é uma string válida
+      const name = String(taskData.name).trim();
+
       const response = await axios.post<Task>(`${this.apiUrl}`, {
-        ...taskData,
-        columnId
+        name: name,  // Envia como string explícita
+        columnId: columnId
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
       return response.data;
 
     } catch (error) {
-      console.log('Error creating task:', error);
+      console.error('Error creating task:', error);
+      if (axios.isAxiosError(error)) {
+        console.error('Detalhes do erro:', {
+          status: error.response?.status,
+          data: error.response?.data,
+          headers: error.response?.headers
+        });
+      }
       throw error;
     }
   }
 
   async getTasksByColumn(columnId: string): Promise<Task[]> {
     try {
-      const response = await axios.get<Task[]>(`${environment.apiUrl}/tasks/${columnId}`);
+      const response = await axios.get<Task[]>(`${this.apiUrl}/${columnId}`);
       return response.data;
     } catch (error) {
       console.error(`Error loading tasks for column ${columnId}:`, error);
@@ -51,7 +65,7 @@ export class TaskService {
 
     } catch (error) {
       console.log('Error updating name task', error)
-      throw error   
+      throw error
     }
   }
 

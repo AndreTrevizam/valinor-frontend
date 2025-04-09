@@ -5,18 +5,23 @@ import { TaskService } from '../../services/task.service';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Task } from '../../models/task.model';
+import { ColumnheaderComponent } from '../columnheader/columnheader.component';
+import { TaskComponent } from '../task/task.component';
+import { TaskFormComponent } from '../task-form/task-form.component';
 
 @Component({
   selector: 'app-column',
-  imports: [FormsModule],
+  standalone: true,
+  imports: [FormsModule, ColumnheaderComponent, TaskComponent, TaskFormComponent],
   templateUrl: './column.component.html',
   styleUrl: './column.component.css'
 })
+
 export class ColumnComponent implements OnInit, OnDestroy {
   constructor(
     private columnService: ColumnService,
     private taskService: TaskService,
-  ) {}
+  ) { }
 
   private destroy$ = new Subject<void>();
 
@@ -37,7 +42,7 @@ export class ColumnComponent implements OnInit, OnDestroy {
     this.editingColumnId = column.id;
     this.editedColumnName = column.name;
   }
-  
+
   cancelEditingColumn() {
     this.editingColumnId = null;
     this.editedColumnName = '';
@@ -47,7 +52,7 @@ export class ColumnComponent implements OnInit, OnDestroy {
     this.editingTaskId = task.id;
     this.editedTaskName = task.name;
   }
-  
+
   cancelEditingTask() {
     this.editingTaskId = null;
     this.editedTaskName = '';
@@ -96,7 +101,7 @@ export class ColumnComponent implements OnInit, OnDestroy {
   async loadColumnsWithTasks() {
     this.isLoading = true;
     this.error = null;
-    
+
     try {
       await this.columnService.loadColumnsWithTasks();
     } catch (error) {
@@ -106,20 +111,18 @@ export class ColumnComponent implements OnInit, OnDestroy {
       this.isLoading = false;
     }
   }
-  
-  async addTask(event: Event, columnId: string) {
-    event.preventDefault();
-  
-    if (!this.newTaskName.trim()) return;
+
+  async addTask(taskName: string, columnId: string) {
+    // Agora taskName é garantidamente a string do input
+    if (!taskName.trim()) return;
   
     try {
       this.isLoading = true;
       await this.taskService.createTask(columnId, {
-        name: this.newTaskName,
+        name: taskName
       });
       
       await this.columnService.loadColumnsWithTasks();
-
       this.newTaskName = '';
       this.cancelAddingTask();
     } catch (error) {
@@ -160,25 +163,18 @@ export class ColumnComponent implements OnInit, OnDestroy {
     }
   }
 
-  async saveColumnName(columnId: string) {
-    if (!this.editedColumnName.trim()) return
-
+  async saveColumnName(columnId: string, newName: string) {
+    if (!newName.trim()) return;
+  
     try {
-      this.isLoading = true
-
-      await this.columnService.updateColumnName(
-        columnId,
-        { name: this.editedColumnName }
-      )
-      
-      this.cancelEditingColumn()
-
-      await this.columnService.loadColumnsWithTasks()
-
-
+      this.isLoading = true;
+      await this.columnService.updateColumnName(columnId, { name: newName });
+      await this.columnService.loadColumnsWithTasks();
+      this.cancelEditingColumn();
     } catch (error) {
-      console.log('Error saving column name', error)
-      throw error
+      console.error('Error saving column name:', error);
+    } finally {
+      this.isLoading = false;
     }
   }
 
