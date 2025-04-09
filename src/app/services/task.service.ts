@@ -69,5 +69,23 @@ export class TaskService {
     }
   }
 
+  async updateTaskColumn(taskId: string, newColumnId: string): Promise<Task> {
+    try {
+      const response = await axios.patch<Task>(
+        `${this.apiUrl}/${taskId}/column`,
+        { columnId: newColumnId },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error moving task:', error);
+      throw error;
+    }
+  }
+
   constructor() { }
 }

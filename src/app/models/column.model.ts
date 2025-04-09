@@ -4,5 +4,5 @@ export interface Column {
   id: string
   name: string
   order?: number
-  tasks?: Task[]
+  tasks: Task[]
 }

@@ -8,11 +8,12 @@ import { Task } from '../../models/task.model';
 import { ColumnheaderComponent } from '../columnheader/columnheader.component';
 import { TaskComponent } from '../task/task.component';
 import { TaskFormComponent } from '../task-form/task-form.component';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-column',
   standalone: true,
-  imports: [FormsModule, ColumnheaderComponent, TaskComponent, TaskFormComponent],
+  imports: [FormsModule, ColumnheaderComponent, TaskComponent, TaskFormComponent, DragDropModule],
   templateUrl: './column.component.html',
   styleUrl: './column.component.css'
 })
@@ -197,5 +198,54 @@ export class ColumnComponent implements OnInit, OnDestroy {
       console.log('Error saving task name', error)
       throw error
     }
+  }
+
+  getConnectedLists(): string[] {
+    return this.columns.map(column => 'column-' + column.id);
+  }
+
+  async drop(event: CdkDragDrop<Task[]>) {
+    if (event.previousContainer === event.container) {
+      // Movimento dentro da mesma coluna
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else {
+      // Movimento entre colunas
+      const task: Task = event.item.data;
+      const previousColumnId = event.previousContainer.id.replace('column-', '');
+      const newColumnId = event.container.id.replace('column-', '');
+
+      // Atualização otimista (UI primeiro)
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+
+      try {
+        // Atualiza no backend
+        await this.taskService.updateTaskColumn(task.id, newColumnId);
+      } catch (error) {
+        console.error('Error moving task:', error);
+        // Reverte em caso de erro
+        transferArrayItem(
+          event.container.data,
+          event.previousContainer.data,
+          event.currentIndex,
+          event.previousIndex
+        );
+      }
+    }
+  }
+
+  private getColumnIdFromContainerId(containerId: string): string {
+    // Extrai o ID da coluna do ID do container
+    // O CDK usa IDs no formato "cdk-drop-list-X" onde X é o índice
+    const index = parseInt(containerId.replace('cdk-drop-list-', ''));
+    return this.columns[index].id;
   }
 }
