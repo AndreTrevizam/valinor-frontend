@@ -129,3 +129,27 @@ form {
 .cdk-drop-list-dragging .task-item:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+.columns-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  align-items: flex-start;
+}
+
+/* Estilo durante o arraste de colunas */
+.card.column-card.cdk-drag-preview {
+  opacity: 0.8;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transform: rotate(3deg);
+}
+
+/* Animação ao soltar coluna */
+.card.column-card.cdk-drag-animating {
+  transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Espaço reservado durante o arraste */
+.columns-container.cdk-drop-list-dragging .card.column-card:not(.cdk-drag-placeholder) {
+  transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+}

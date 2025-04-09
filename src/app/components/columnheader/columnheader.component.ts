@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Column } from '../../models/column.model'
 import { FormsModule } from '@angular/forms';
 
 @Component({

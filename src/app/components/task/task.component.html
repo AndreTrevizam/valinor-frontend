@@ -3,6 +3,7 @@
     <form (ngSubmit)="onSave()">
       <input type="text" [(ngModel)]="editedName" name="editedName" 
              (keyup.escape)="cancel.emit()" autofocus />
+      <button type="submit" style="display: none"></button>
     </form>
   } @else {
     <h3>{{ task.name }}</h3>

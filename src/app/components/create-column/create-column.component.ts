@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ColumnService } from '../../services/column.service';
-import { Column } from '../../models/column.model';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -27,7 +26,7 @@ export class CreateColumnComponent {
   async createColumn(event: Event) {
     event.preventDefault();
 
-    if (!this.newColumnName.trim()) return; // Previne criar uma coluna vazia
+    if (!this.newColumnName.trim()) return;
 
     try {
       await this.columnService.createColumn(this.newColumnName);

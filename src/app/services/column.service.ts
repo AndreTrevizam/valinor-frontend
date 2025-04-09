@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
 import { Column } from '../models/column.model';
-import { environment } from '../utils/enviroment';
+import { environment } from '../environments/enviroment';
 import { BehaviorSubject } from 'rxjs';
 import { TaskService } from './task.service';
 import { Task } from '../models/task.model';
@@ -31,7 +31,9 @@ export class ColumnService {
   async createColumn(columnName: string): Promise<Column> {
     try {
       const response = await axios.post<Column>(this.apiUrl, { name: columnName });
-      const newColumn = response.data;
+      const newColumn = {...response.data,
+        tasks: []
+      }
 
       const currentColumns = this.columnsSource.value;
       this.columnsSource.next([...currentColumns, newColumn]);

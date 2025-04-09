@@ -114,7 +114,6 @@ export class ColumnComponent implements OnInit, OnDestroy {
   }
 
   async addTask(taskName: string, columnId: string) {
-    // Agora taskName é garantidamente a string do input
     if (!taskName.trim()) return;
   
     try {
@@ -179,7 +178,7 @@ export class ColumnComponent implements OnInit, OnDestroy {
     }
   }
 
-  async saveTaskName(taskId: string, columnId: string) {
+  async saveTaskName(taskId: string, columnId: string, newName: string) {
     if (!this.editedTaskName.trim()) return
 
     try {
@@ -187,7 +186,7 @@ export class ColumnComponent implements OnInit, OnDestroy {
 
       await this.taskService.updateTaskName(
         taskId,
-        { name: this.editedTaskName, columnId: columnId }
+        { name: newName, columnId: columnId }
       )
 
       this.cancelEditingTask()
@@ -197,6 +196,8 @@ export class ColumnComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.log('Error saving task name', error)
       throw error
+    } finally {
+      this.isLoading = false
     }
   }
 
@@ -204,7 +205,11 @@ export class ColumnComponent implements OnInit, OnDestroy {
     return this.columns.map(column => 'column-' + column.id);
   }
 
-  async drop(event: CdkDragDrop<Task[]>) {
+  dropColumn(event: CdkDragDrop<Column[]>) {
+    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
+  }
+
+  async dropTask(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
       // Movimento dentro da mesma coluna
       moveItemInArray(
@@ -218,7 +223,7 @@ export class ColumnComponent implements OnInit, OnDestroy {
       const previousColumnId = event.previousContainer.id.replace('column-', '');
       const newColumnId = event.container.id.replace('column-', '');
 
-      // Atualização otimista (UI primeiro)
+      // Atualização otimista
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -240,12 +245,5 @@ export class ColumnComponent implements OnInit, OnDestroy {
         );
       }
     }
-  }
-
-  private getColumnIdFromContainerId(containerId: string): string {
-    // Extrai o ID da coluna do ID do container
-    // O CDK usa IDs no formato "cdk-drop-list-X" onde X é o índice
-    const index = parseInt(containerId.replace('cdk-drop-list-', ''));
-    return this.columns[index].id;
   }
 }

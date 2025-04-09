@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
-import { environment } from '../utils/enviroment';
+import { environment } from '../environments/enviroment';
 import { Task } from '../models/task.model';
 
 @Injectable({
